@@ -1,6 +1,9 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.scss';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 import SettingsIcon from './img/settings-icon.svg';
 
 function App() {
@@ -108,6 +111,89 @@ function App() {
     });
   }, [totalPages]);
 
+  const optionsLineChart = {
+    title: {
+      text: 'My charts',
+    },
+    chart: {
+      type: 'column',
+    },
+    xAxis: {
+      categories: [
+        '共同生活',
+        '獨立生活',
+      ],
+      crosshair: true,
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: '數量',
+      },
+    },
+    plotOptions: {
+      column: {
+        pointPadding: 0.3,
+        borderWidth: 0,
+      },
+    },
+    series: [{
+      name: '男性',
+      data: [49.9, 71.5],
+
+    }, {
+      name: '女性',
+      data: [83.6, 78.8],
+
+    }],
+  };
+
+  const optionsPieChart = {
+    chart: {
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false,
+      type: 'pie',
+    },
+    title: {
+      text: '戶數統計',
+      align: 'center',
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>',
+    },
+    accessibility: {
+      point: {
+        valueSuffix: '%',
+      },
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: true,
+          format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+        },
+      },
+    },
+    series: [{
+      name: 'Brands',
+      colorByPoint: true,
+      data: [{
+        name: '共同生活',
+        y: 70.67,
+        sliced: true,
+        selected: true,
+      }, {
+        name: '獨立生活',
+        y: 14.77,
+        sliced: true,
+        selected: true,
+      }],
+    }],
+  };
+
   return (
     <div className="wrapper">
       <div className="header">
@@ -143,6 +229,14 @@ function App() {
           Submit
         </button>
       </form>
+      <HighchartsReact
+        highcharts={Highcharts}
+        options={optionsLineChart}
+      />
+      <HighchartsReact
+        highcharts={Highcharts}
+        options={optionsPieChart}
+      />
     </div>
   );
 }
