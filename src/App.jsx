@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import './App.scss';
 import Highcharts from 'highcharts';
@@ -14,6 +14,15 @@ function App() {
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedCounty, setSelectedCounty] = useState('');
   const [selectedTown, setSelectedTown] = useState('');
+  const [hhOrdinaryMale, setHhOrdinaryMale] = useState(null);
+  const [hhOrdinaryFemale, setHhOrdinaryFemale] = useState(null);
+  const [hhSingleMale, setHhSingleMale] = useState(null);
+  const [hhSingleFemale, setHhSingleFemale] = useState(null);
+
+  const showCharts = useMemo(() => hhOrdinaryMale !== null
+  && hhOrdinaryFemale !== null
+  && hhSingleMale !== null
+  && hhSingleFemale !== null, [hhOrdinaryFemale, hhOrdinaryMale, hhSingleFemale, hhSingleMale]);
 
   function getCountyTownStrings(countyTownStringData) {
     const result = [];
@@ -54,22 +63,47 @@ function App() {
     setSelectedYear(e.target.value);
     setSelectedCounty('');
     setSelectedTown('');
+    setHhOrdinaryMale(null);
+    setHhOrdinaryFemale(null);
+    setHhSingleMale(null);
+    setHhSingleFemale(null);
   }
 
   function handleCountyChange(e) {
     setSelectedCounty(e.target.value);
     setSelectedTown('');
+    setHhOrdinaryMale(null);
+    setHhOrdinaryFemale(null);
+    setHhSingleMale(null);
+    setHhSingleFemale(null);
   }
 
   function handleTownChange(e) {
     setSelectedTown(e.target.value);
+    setHhOrdinaryMale(null);
+    setHhOrdinaryFemale(null);
+    setHhSingleMale(null);
+    setHhSingleFemale(null);
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log(selectedYear, selectedCounty, selectedTown);
     const res = await axios.get(`https://www.ris.gov.tw/rs-opendata/api/v1/datastore/ODRP019/${selectedYear}?COUNTY=${selectedCounty}&TOWN=${selectedTown}`);
-    console.log('res', res);
+    const hhData = res.data.responseData;
+    let hhOrdinaryMaleSum = 0;
+    let hhSingleMaleSum = 0;
+    let hhOrdinaryFemaleSum = 0;
+    let hhSingleFemaleSum = 0;
+    hhData.forEach((householdData) => {
+      hhOrdinaryMaleSum += Number(householdData.household_ordinary_m);
+      hhSingleMaleSum += Number(householdData.household_single_m);
+      hhOrdinaryFemaleSum += Number(householdData.household_ordinary_f);
+      hhSingleFemaleSum += Number(householdData.household_single_f);
+    });
+    setHhOrdinaryMale(Number(hhOrdinaryMaleSum));
+    setHhOrdinaryFemale(Number(hhOrdinaryFemaleSum));
+    setHhSingleMale(Number(hhSingleMaleSum));
+    setHhSingleFemale(Number(hhSingleFemaleSum));
   }
 
   useEffect(() => {
@@ -83,7 +117,7 @@ function App() {
 
   useEffect(() => {
     const fetchInitData = async () => {
-      const res = await axios.get(`https://www.ris.gov.tw/rs-opendata/api/v1/datastore/ODRP019/110?PAGE=${1}`);
+      const res = await axios.get('https://www.ris.gov.tw/rs-opendata/api/v1/datastore/ODRP019/110?');
       setTotalPages(res.data.totalPage);
       setData(res.data.responseData);
     };
@@ -139,11 +173,11 @@ function App() {
     },
     series: [{
       name: '男性',
-      data: [49.9, 71.5],
+      data: [hhOrdinaryMale ?? 0, hhSingleMale ?? 0],
 
     }, {
       name: '女性',
-      data: [83.6, 78.8],
+      data: [hhOrdinaryFemale ?? 0, hhSingleFemale ?? 0],
 
     }],
   };
@@ -182,12 +216,12 @@ function App() {
       colorByPoint: true,
       data: [{
         name: '共同生活',
-        y: 70.67,
+        y: hhOrdinaryFemale ?? 0 + hhOrdinaryMale ?? 0,
         sliced: true,
         selected: true,
       }, {
         name: '獨立生活',
-        y: 14.77,
+        y: hhSingleMale ?? 0 + hhSingleFemale ?? 0,
         sliced: true,
         selected: true,
       }],
@@ -229,14 +263,18 @@ function App() {
           Submit
         </button>
       </form>
+      {showCharts && (
       <HighchartsReact
         highcharts={Highcharts}
         options={optionsLineChart}
       />
+      )}
+      {showCharts && (
       <HighchartsReact
         highcharts={Highcharts}
         options={optionsPieChart}
       />
+      )}
     </div>
   );
 }
