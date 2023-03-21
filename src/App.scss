@@ -1,0 +1,50 @@
+.header {
+  background-color: #651FFF;
+  height: 48px;
+  span {
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Ubuntu';
+    font-style: normal;
+    position: relative;
+    top: 15px;
+    left: 15px;
+  }
+  .settings-icon {
+    position: relative;
+    top: 15px;
+    right: 15px;
+    float: right;
+    color: white;
+    padding: 4px;
+    outline: 1px solid gray;
+    border-radius: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 16px;
+    height: 16px;
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+}
+
+.taiwan-logo {
+  width: 60vw;
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 200px;
+  line-height: 75%;
+
+  background-image: linear-gradient(to left, violet, indigo, blue, green, #d2d20f, #eb9c0b, red);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  transform: rotate(90deg);
+  transform-origin: 75px 75px;
+};
