@@ -229,53 +229,55 @@ function App() {
   };
 
   return (
-    <div className="wrapper">
+    <>
       <div className="header">
         <span>LOGO</span>
         <div className="settings-icon">
           <img src={SettingsIcon} alt="settings-icon" />
         </div>
       </div>
-      <h3>TAIWAN</h3>
-      <div>人口數、戶數按戶別及性別統計</div>
-      <form onSubmit={handleSubmit}>
-        <select name="year" id="year-select" onChange={handleYearChange}>
-          <option value="">Please choose a year</option>
-          {yearsEnum.map((year) => (
-            <option key={year} value={year}>{year}</option>
-          ))}
-        </select>
-        <select name="county" id="county-select" onChange={handleCountyChange} disabled={!selectedYear}>
-          <option value="">Please choose a county</option>
-          {countiesAndTowns.map((countyAndTowns) => (
-            <option key={countyAndTowns.county} value={countyAndTowns.county}>
-              {countyAndTowns.county}
-            </option>
-          ))}
-        </select>
-        <select name="town" id="town-select" onChange={handleTownChange} disabled={!selectedCounty}>
-          <option value="">Please choose a town</option>
-          {countiesAndTowns.find((c) => selectedCounty === c.county)?.towns.map((town) => (
-            <option key={town} value={town}>{town}</option>
-          ))}
-        </select>
-        <button type="submit" disabled={!selectedYear || !selectedCounty || !selectedTown}>
-          Submit
-        </button>
-      </form>
-      {showCharts && (
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={optionsLineChart}
-      />
-      )}
-      {showCharts && (
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={optionsPieChart}
-      />
-      )}
-    </div>
+      <h3 className="taiwan-logo">TAIWAN</h3>
+      <div className="wrapper">
+        <div className="main-title">人口數、戶數按戶別及性別統計</div>
+        <form onSubmit={handleSubmit}>
+          <select name="year" id="year-select" onChange={handleYearChange}>
+            <option value="">Please choose a year</option>
+            {yearsEnum.map((year) => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
+          <select name="county" id="county-select" onChange={handleCountyChange} disabled={!selectedYear}>
+            <option value="">Please choose a county</option>
+            {countiesAndTowns.map((countyAndTowns) => (
+              <option key={countyAndTowns.county} value={countyAndTowns.county}>
+                {countyAndTowns.county}
+              </option>
+            ))}
+          </select>
+          <select name="town" id="town-select" onChange={handleTownChange} disabled={!selectedCounty}>
+            <option value="">Please choose a town</option>
+            {countiesAndTowns.find((c) => selectedCounty === c.county)?.towns.map((town) => (
+              <option key={town} value={town}>{town}</option>
+            ))}
+          </select>
+          <button type="submit" disabled={!selectedYear || !selectedCounty || !selectedTown}>
+            Submit
+          </button>
+        </form>
+        {showCharts && (
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={optionsLineChart}
+          />
+        )}
+        {showCharts && (
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={optionsPieChart}
+          />
+        )}
+      </div>
+    </>
   );
 }
 
