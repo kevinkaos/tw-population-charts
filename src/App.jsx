@@ -9,8 +9,8 @@ function App() {
   const [totalPages, setTotalPages] = useState(null);
   const [countiesAndTowns, setCountiesAndTowns] = useState([]);
   const [selectedYear, setSelectedYear] = useState(null);
-  const [selectedCounty, setSelectedCounty] = useState(null);
-  const [selectedTown, setSelectedTown] = useState(null);
+  const [selectedCounty, setSelectedCounty] = useState('');
+  const [selectedTown, setSelectedTown] = useState('');
 
   function getCountyTownStrings(countyTownStringData) {
     const result = [];
@@ -62,9 +62,11 @@ function App() {
     setSelectedTown(e.target.value);
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     console.log(selectedYear, selectedCounty, selectedTown);
+    const res = await axios.get(`https://www.ris.gov.tw/rs-opendata/api/v1/datastore/ODRP019/${selectedYear}?COUNTY=${selectedCounty}&TOWN=${selectedTown}`);
+    console.log('res', res);
   }
 
   useEffect(() => {
