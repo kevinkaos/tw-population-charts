@@ -95,25 +95,33 @@ function Home() {
 
   async function submit() {
     setLoading(true);
-    const res = await axios.get(`https://www.ris.gov.tw/rs-opendata/api/v1/datastore/ODRP019/${selectedYear}?COUNTY=${selectedCounty}&TOWN=${selectedTown}`);
-    const hhData = res.data.responseData;
-    let hhOrdinaryMaleSum = 0;
-    let hhSingleMaleSum = 0;
-    let hhOrdinaryFemaleSum = 0;
-    let hhSingleFemaleSum = 0;
-    hhData.forEach((householdData) => {
-      hhOrdinaryMaleSum += Number(householdData.household_ordinary_m);
-      hhSingleMaleSum += Number(householdData.household_single_m);
-      hhOrdinaryFemaleSum += Number(householdData.household_ordinary_f);
-      hhSingleFemaleSum += Number(householdData.household_single_f);
-    });
-    setHhOrdinaryMale(Number(hhOrdinaryMaleSum));
-    setHhOrdinaryFemale(Number(hhOrdinaryFemaleSum));
-    setHhSingleMale(Number(hhSingleMaleSum));
-    setHhSingleFemale(Number(hhSingleFemaleSum));
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
+    try {
+      const res = await axios.get(`https://www.ris.gov.tw/rs-opendata/api/v1/datastore/ODRP019/${selectedYear}?COUNTY=${selectedCounty}&TOWN=${selectedTown}`);
+      if (res.data.responseCode === 'OD-0102-S') {
+        setLoading(false);
+      }
+      const hhData = res.data.responseData;
+      let hhOrdinaryMaleSum = 0;
+      let hhSingleMaleSum = 0;
+      let hhOrdinaryFemaleSum = 0;
+      let hhSingleFemaleSum = 0;
+      hhData.forEach((householdData) => {
+        hhOrdinaryMaleSum += Number(householdData.household_ordinary_m);
+        hhSingleMaleSum += Number(householdData.household_single_m);
+        hhOrdinaryFemaleSum += Number(householdData.household_ordinary_f);
+        hhSingleFemaleSum += Number(householdData.household_single_f);
+      });
+      setHhOrdinaryMale(Number(hhOrdinaryMaleSum));
+      setHhOrdinaryFemale(Number(hhOrdinaryFemaleSum));
+      setHhSingleMale(Number(hhSingleMaleSum));
+      setHhSingleFemale(Number(hhSingleFemaleSum));
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    } catch (e) {
+      // eslint-disable-next-line no-alert
+      alert('查無資料');
+    }
   }
 
   function handleSubmit(e) {
