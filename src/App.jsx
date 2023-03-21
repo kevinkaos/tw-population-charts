@@ -147,7 +147,7 @@ function App() {
 
   const optionsLineChart = {
     title: {
-      text: 'My charts',
+      text: '人口數統計',
     },
     chart: {
       type: 'column',
