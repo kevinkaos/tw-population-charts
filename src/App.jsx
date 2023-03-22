@@ -6,6 +6,7 @@ import Home from './Home';
 function App() {
   return (
     <Routes>
+      <Route path="*" element={<div>404 Not Found</div>} />
       <Route path="/" element={<Home />} />
       <Route path="/:year" element={<Home />}>
         <Route path=":county" element={<Home />}>

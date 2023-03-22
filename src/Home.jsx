@@ -274,7 +274,7 @@ function Home() {
         </div>
       ) : (
         <div className="wrapper">
-          <div className="main-title">人口數、戶數按戶別及性別統計</div>
+          <h1 className="main-title">人口數、戶數按戶別及性別統計</h1>
           <form onSubmit={handleSubmit}>
             <select name="year" id="year-select" onChange={handleYearChange}>
               {yearParam ? <option value={Number(yearParam)}>{yearParam}</option> : <option value="">Please choose a year</option>}
@@ -314,6 +314,7 @@ function Home() {
               Submit
             </button>
           </form>
+          <h1>{`${yearParam} ${countyParam} ${townParam}`}</h1>
           {showCharts && (
           <HighchartsReact
             highcharts={Highcharts}
